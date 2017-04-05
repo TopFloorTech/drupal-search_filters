@@ -1,0 +1,5 @@
+search_filters.admin_settings:
+  route_name: search_filters.admin_settings
+  title: 'Search filters'
+  description: 'Configure search filter mappings.'
+  parent: system.admin_config_search

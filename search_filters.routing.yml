@@ -1,0 +1,7 @@
+search_filters.admin_settings:
+  path: /admin/config/search/search-filters
+  defaults:
+    _title: 'Search Filters'
+    _form: \Drupal\search_filters\Form\SettingsForm
+  requirements:
+    _permission: 'administer search filters'

@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @file
+ * Contains search_filters.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function search_filters_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the search_filters module.
+    case 'help.page.search_filters':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Customizes taxonomy-based search filtering') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function search_filters_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
+  $mapping = new \Drupal\search_filters\SearchFiltersMapping();
+
+  $mapping->setFiltersOnEntity($entity);
+}

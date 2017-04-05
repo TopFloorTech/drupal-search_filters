@@ -1,0 +1,5 @@
+name: Search filters
+type: module
+description: Customizes taxonomy-based search filtering
+core: 8.x
+package: Search
