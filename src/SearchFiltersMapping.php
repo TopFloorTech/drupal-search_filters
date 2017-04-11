@@ -104,11 +104,13 @@ class SearchFiltersMapping {
     if (strpos($term_name, '[') === 0) {
       $name_field = str_replace(['[', ']'], '', $term_name);
 
-      if (!$entity->hasField($name_field) || $entity->get($name_field)->isEmpty()) {
-        return;
+      if ($entity->hasField($name_field) && !$entity->get($name_field)->isEmpty()) {
+        $field = $entity->get($name_field);
+        $term_name = $field->value;
+        if ($field->getSetting('allowed_values')) {
+          $term_name = $field->getSetting('allowed_values')[$term_name];
+        }
       }
-
-      $term_name = $entity->get($name_field)->value;
     }
 
     $config = \Drupal::config('search_filters.settings');
