@@ -1,5 +1,5 @@
 name: Search filters
 type: module
 description: Customizes taxonomy-based search filtering
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^8 || ^9 || ^10
 package: Search
