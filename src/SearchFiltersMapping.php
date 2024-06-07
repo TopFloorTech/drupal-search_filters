@@ -7,8 +7,19 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\taxonomy\VocabularyInterface;
 
+/**
+ * Contains search filter mapping.
+ */
 class SearchFiltersMapping {
+
+  /**
+   * An array of mappings.
+   *
+   * @var array
+   */
   protected $mapping = [];
+
+  
   protected $config;
 
   public function __construct($mapping = NULL) {
@@ -21,12 +32,19 @@ class SearchFiltersMapping {
     $this->setMapping($mapping);
   }
 
+  /**
+   * Sets the mapping.
+   *
+   * @param mixed $mapping
+   *   The mapping array if set.
+   */
   public function setMapping($mapping = NULL) {
     $this->mapping = [];
 
     if (is_array($mapping)) {
       $this->mapping = $mapping;
-    } elseif (is_string($mapping)) {
+    }
+    elseif (is_string($mapping)) {
       $bundle_mapping = preg_split('/(\r\n|\r|\n)/', $mapping);
 
       foreach ($bundle_mapping as $line) {
