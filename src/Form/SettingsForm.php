@@ -38,7 +38,7 @@ class SettingsForm extends ConfigFormBase {
     $config = $this->config('search_filters.settings');
 
     $form['information'] = [
-      '#markup' => '<p>After saving these settings, any affected entities will need to be re-saved.</p>',
+      '#markup' => '<p>' . $this->t('After saving these settings, any affected entities will need to be re-saved.') . '</p>',
     ];
 
     $form['vocabulary'] = [

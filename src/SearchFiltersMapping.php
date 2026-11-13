@@ -2,6 +2,7 @@
 
 namespace Drupal\search_filters;
 
+use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -17,12 +18,21 @@ class SearchFiltersMapping {
    *
    * @var array
    */
-  protected $mapping = [];
+  protected array $mapping = [];
 
-  
-  protected $config;
+  /**
+   * Drupal\Core\Config\ImmutableConfig definition.
+   *
+   * @var \Drupal\Core\Config\ImmutableConfig
+   */
+  protected ImmutableConfig $config;
 
-  public function __construct($mapping = NULL) {
+  /**
+   * Constructs a new SearchFilterMapping object.
+   *
+   * @param array|null $mapping A mapping of config.
+   */
+  public function __construct(?array $mapping = NULL) {
     $this->config = \Drupal::config('search_filters.settings');
 
     if (is_null($mapping)) {
@@ -38,7 +48,7 @@ class SearchFiltersMapping {
    * @param mixed $mapping
    *   The mapping array if set.
    */
-  public function setMapping($mapping = NULL) {
+  public function setMapping(mixed $mapping = NULL): void {
     $this->mapping = [];
 
     if (is_array($mapping)) {
@@ -48,7 +58,7 @@ class SearchFiltersMapping {
       $bundle_mapping = preg_split('/(\r\n|\r|\n)/', $mapping);
 
       foreach ($bundle_mapping as $line) {
-        list($entity_type, $bundle, $values) = explode(':', $line, 3);
+        [$entity_type, $bundle, $values] = explode(':', $line, 3);
 
         $values = explode('|', $values);
 
@@ -59,7 +69,14 @@ class SearchFiltersMapping {
     }
   }
 
-  public function shouldSetFilters(EntityInterface $entity) {
+  /**
+   * Should set filters.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *
+   * @return bool
+   */
+  public function shouldSetFilters(EntityInterface $entity): bool {
     if (!$entity instanceof FieldableEntityInterface) {
       return FALSE;
     }
@@ -90,7 +107,14 @@ class SearchFiltersMapping {
       || array_key_exists('*', $this->mapping[$entity->getEntityTypeId()]));
   }
 
-  public function setFiltersOnEntity(EntityInterface $entity) {
+  /**
+   * Set filters on entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *
+   * @return void
+   */
+  public function setFiltersOnEntity(EntityInterface $entity): void {
     if (!$this->shouldSetFilters($entity)) {
       return;
     }
@@ -108,7 +132,15 @@ class SearchFiltersMapping {
     }
   }
 
-  protected function clearFilterValues(FieldableEntityInterface $entity) {
+  /**
+   * Clears filter values.
+   *
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
+   *
+   * @return void
+   * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
+   */
+  protected function clearFilterValues(FieldableEntityInterface $entity): void {
     $config = \Drupal::config('search_filters.settings');
 
     $field_name = $config->get('field_name');
@@ -118,6 +150,16 @@ class SearchFiltersMapping {
     }
   }
 
+  /**
+   * @param $term_name
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
+   *
+   * @return void
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
+   */
   protected function setFilterOnEntity($term_name, FieldableEntityInterface $entity) {
     if (strpos($term_name, '[') === 0) {
       $name_field = str_replace(['[', ']'], '', $term_name);
